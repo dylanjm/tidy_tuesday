@@ -1,7 +1,6 @@
 library(tidyverse)
 library(readxl)
 library(ggthemes)
-library(ggradar)
 
 # Read in the data
 world.deaths <- read_xlsx(here::here("data/global_mortality.xlsx"))
@@ -41,12 +40,12 @@ world.deaths.long %>%
        caption = "Source: IHME, Global Burden of Disease") +
   theme_minimal() + 
   theme(
-    plot.title = element_text(size = rel(1.3)),
+    plot.title = element_text(size = rel(1.3), family = "Merriweather"),
     axis.title = element_blank(),
     panel.grid.major.y = element_blank(), 
     panel.grid.minor.x = element_blank(),
     panel.grid.major = element_line(color = "#d9d9d9", linetype = c("22")),
-    plot.subtitle = element_text(color = "grey30"),
+    plot.subtitle = element_text(color = "grey30", family = "Merriweather Light"),
     plot.caption = element_text(color = "grey30")
   )
 

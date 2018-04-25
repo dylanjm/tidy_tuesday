@@ -3,7 +3,6 @@ library(readxl)
 library(here)
 library(glue)
 library(ggrepel)
-library(magrittr)
 
 nfl.data <- read_xlsx(here("data/tidy_tuesday_week2.xlsx"))
 
