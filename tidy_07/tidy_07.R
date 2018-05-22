@@ -39,19 +39,21 @@ movie_ranking <- clean_dat %>%
   geom_bar(stat = "identity",
            fill = "dodgerblue",
            position = position_dodge(width=.1),
-           width = .5) + 
+           width = .7) + 
   geom_text(aes(y = pct, 
                 label = c(paste0(round(pct[1]),"%"), round(pct[2:6]))), 
             nudge_y = .9,
             size = 3,
             color = "grey30") +
+  scale_y_continuous(expand = c(0,.5)) +
   coord_flip() +
-  labs(title = "What's the Best 'Star Wars` Movie?",
+  labs(title = "What's the Best `Star Wars` Movie?",
        subtitle = "Of 471 respondents who have seen all six films") +
   theme_fivethirtyeight() + 
-  theme(panel.grid = element_blank(),
+  theme(plot.margin = margin(4,1,4,1,"cm"),
+        panel.grid = element_blank(),
         axis.text.x = element_blank(),
-        axis.text.y = element_text(face = "bold"),
-        plot.title = element_text(hjust = -.65),
-        plot.subtitle = element_text(hjust = -.5))
+        axis.text.y = element_text(face = "bold", margin = margin(r=-1)),
+        plot.title = element_text(margin = margin(2,2,2,2)),
+        plot.subtitle = element_text(margin = margin(t = 3)))
   
