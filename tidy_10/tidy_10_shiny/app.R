@@ -13,6 +13,24 @@ library(lubridate)
 library(leaflet)
 library(glue)
 
+# TRIP CLEAN WAS TOO LARGE FOR GITHUB, RUN THE BELOW CODE TO EFFECTIVELY GET
+# THE SAME TRIP CLEAN DATA I AM USING. 
+
+# # Read in data supa fast w/ data.table
+# trip_data <- list.files(here::here("data/PublicTripData"), 
+#                         pattern = "*.csv", full.names = TRUE) %>% 
+#   map_df(~data.table::fread(.x))
+# 
+# # Clean up data
+# trip_clean <- trip_data %>% 
+#   filter(StartDate != "", StartTime != "") %>%
+#   mutate(Start = parse_date_time(glue("{StartDate} {StartTime}"), "mdY HM"),
+#          Hour = parse_factor(hour(Start), c(0,23:1)),
+#          Weekday = fct_relevel(wday(Start, label = TRUE),
+#                                c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")))
+#
+# write_rds(trip_clean, here::here("data/trip_clean.rds"))
+
 trip_clean <- read_rds(here::here("data/trip_clean.rds"))
 
 # Define UI for application that draws a histogram
