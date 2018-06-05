@@ -16,6 +16,7 @@ trip_clean <- trip_data %>%
          Hour = parse_factor(hour(Start), c(0,23:1)),
          Weekday = fct_relevel(wday(Start, label = TRUE),
                                c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")))
+
 # Tile Plot
 t <- trip_clean %>% 
   count(Weekday, Hour) %>%
