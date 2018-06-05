@@ -85,9 +85,8 @@ ggplot() +
            aes(x = long, y = lat, map_id = id),
            color="#ffffff", fill="#d2d3d5") + 
   # base layer of map dots
-  geom_point(data = coffee %>% filter(brand == 'Starbucks'), 
-             aes(x = long_round, y = lat_round), 
-             color = "#43634A", size = 0.7) +
+  geom_point(data = coffee, 
+             aes(x = long_round, y = lat_round, color = brand), size = 0.7) +
   theme
 
 map_brands
