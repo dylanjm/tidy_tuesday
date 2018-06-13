@@ -30,20 +30,28 @@ fifa_long <- fifa_data %>%
   mutate(confederation = fct_relevel(confederation, fed_relevel),
          pct_type = fct_relevel(pct_type, metric_relevel))
 
+fifa_long <- fifa_long %>% 
+  mutate(pct2 = case_when(
+    confederation == "UEFA" ~ paste0(pct,"%"),
+    TRUE ~ paste0(pct)
+  ))
+
 ggplot(data = fifa_long,
        aes(x = pct_type, y = confederation, fill = pct)) + 
   geom_tile(color = "grey85", size = .7) + 
-  geom_text(aes(label = pct), nudge_x = .3) + 
+  geom_text(aes(label = pct2, family = "Andale Mono"), nudge_x = .3) + 
   scale_fill_gradient(low = "white", high = "#46a131") +
   scale_x_discrete(position = "top",
                    labels = metric_scales,
                    expand = c(0,0)) + 
   scale_y_discrete(labels = fed_scales) + 
+  labs(title = "FIFA Confederation Audience Share 2010") + 
   guides(fill = F) +
   theme_minimal() + 
   theme(axis.title = element_blank(),
         axis.text = element_text(face = "bold"),
-        plot.margin = margin(5,3,5,3, "cm"))
+        plot.margin = margin(5,3,5,3, "cm"),
+        plot.title = element_text(face = "bold"))
 
 ggplot(data = fifa_data,
        aes(x = population_share/100, 
