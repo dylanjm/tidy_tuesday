@@ -4,3 +4,4 @@
 .Ruserdata
 /data/PublicTripData/
 /data/trip_clean.rds
+.httr-oauth
