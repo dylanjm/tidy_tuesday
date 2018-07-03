@@ -1,55 +1,51 @@
 library(tidyverse)
 library(readxl)
+library(janitor)
 library(ggthemes)
 
 # Read in the data
-world.deaths <- read_xlsx(here::here("data/global_mortality.xlsx"))
+world_deaths <- read_xlsx(here::here("data/global_mortality.xlsx")) 
 
 # Get rid of % sign in all the column titles
-names(world.deaths) <- names(world.deaths) %>% 
+names(world_deaths) <- names(world_deaths) %>% 
   gsub("\\s\\(%\\)", "", .)
 
-# Convert data to long format and filter only on 2016 & world numbers
-# Reorder factors so that the plot shows up in the right order
-world.deaths.long <- world.deaths %>% 
+world_deaths_long <- world_deaths %>% 
   gather(key = "cause", value = "percent", 4:35) %>% 
-  mutate(percent = percent/100,
-         cause = fct_relevel(cause, unique(cause)))
+  mutate(percent = percent/100)
 
-# Original Plot 
-world.deaths.long %>% 
-  filter(year %in% c(2016),
-         country_code %in% ("OWID_WRL")) %>% 
+world_deaths_long %>% 
+  filter(year == 2016, 
+         country_code == "OWID_WRL") %>% 
   mutate(cause = fct_reorder(cause, percent, min)) %>% 
   ggplot(aes(x = cause, y = percent, fill = cause)) + 
   geom_bar(stat = "identity") + 
-  geom_text(aes(y = percent, label=paste0(round(percent*100,2),"%")),
-            hjust = -0.2, size = 3, color = "grey30") + # set up labels on bars
+  geom_text(aes(y = percent, label = glue::glue("{round(percent*100,2)}%")),
+            hjust = -0.18, size = 3, color = "grey30") + 
   scale_y_continuous(breaks = seq(0,.3,.05),
                      labels = scales::percent(seq(0,.3,.05)),
-                     expand = c(0,0),
-                     limits = c(0,.35)) + # make the x-axis start from 0%
-  scale_fill_manual(values = colorRampPalette(solarized_pal()(8))(32)) +
+                     expand = c(0,0), limits = c(0,.35)) + 
+  scale_fill_manual(values = colorRampPalette(solarized_pal()(8))(32)) + 
   coord_flip() + 
-  guides(fill = FALSE) + 
   labs(title = "Share of deaths by cause, World, 2016",
        subtitle = glue::glue("Data refers to the specific cause of death, which is ",
                              "distinguished from risk factors for death, such as ",
                              "air pollution, diet and other lifestyle factors.",
                              "\nThis is shown by cause of death as the percentage of total deaths."),
-       caption = "Source: IHME, Global Burden of Disease") +
+       caption = "Source: IHME, Global Burden of Disease") + 
   theme_minimal() + 
-  theme(
-    plot.title = element_text(size = rel(1.3), family = "Merriweather"),
-    axis.title = element_blank(),
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major = element_line(color = "#d9d9d9", linetype = c("22")),
-    plot.subtitle = element_text(color = "grey30", family = "Merriweather Light"),
-    plot.caption = element_text(color = "grey30")
-  )
+  theme(legend.position = "none",
+        plot.title = element_text(size = rel(1.3), family = "Merriweather"),
+        axis.title = element_blank(),
+        axis.text.x = element_text(size = 12, color = "grey50"),
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major = element_line(color = "#d9d9d9", linetype = c("22")),
+        plot.subtitle = element_text(color = "grey30", family = "Merriweather Light"),
+        plot.caption = element_text(color = "grey30"))
 
-world.deaths.long %>%
+
+world_deaths_long %>%
   filter(!country_code %in% ("OWID_WRL"),
          cause %in% unique(cause)[1:5]) %>% 
   ggplot(aes(x = year, y = percent, group = cause)) + 
@@ -69,3 +65,4 @@ world.deaths.long %>%
     strip.text = element_text(family = "Helvetica", face = "bold"), 
     plot.caption  = element_text(color = "grey30")
   )
+

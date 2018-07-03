@@ -51,8 +51,6 @@ grid.arrange(beer_table, spirit_table, wine_table, nrow = 1)
 ############################################################################
 # GeoSpatial Visualizations
 ############################################################################
-grid.arrange(beer, spirit, wine, as.table = TRUE, nrow = 1)
-
 map_world = map_data(map = "world") %>% 
   filter(region != "Antarctica")
 
@@ -62,7 +60,7 @@ pure <- ggplot() +
            color = "grey20", size = .5) + 
   geom_map(data = drink_data, map = map_world,
            aes(fill = total_litres_of_pure_alcohol, map_id = country)) + 
-  scale_fill_scico(palette = "tokyo", labels = c(0,7,14), breaks = c(0,7,14)) + 
+  scale_fill_gradient(low = "white", high = "#f1bb2b", labels = c(0,7,14), breaks = c(0,7,14)) + 
   labs(title = "Total Litres of Pure Alcohol Consumption Worldwide 2010",
        fill = "Litres") + 
   theme_fivethirtyeight() + 
@@ -78,7 +76,7 @@ beer <- ggplot() +
            color = "grey20", size = .5) + 
   geom_map(data = drink_data, map = map_world,
            aes(fill = beer_servings, map_id = country)) + 
-  scale_fill_scico(palette = "tokyo") + 
+  scale_fill_gradient(low = "white", high = "#008FD5") + 
   labs(title = "Average Number of Servings per Capita of Beer - Worldwide 2010",
        fill = "Servings") + 
   theme_fivethirtyeight() + 
@@ -94,7 +92,7 @@ spirit <- ggplot() +
            color = "grey20", size = .5) + 
   geom_map(data = drink_data, map = map_world,
            aes(fill = spirit_servings, map_id = country)) + 
-  scale_fill_scico(palette = "tokyo") + 
+  scale_fill_gradient(low = "white", high = "#77AB43") +
   labs(title = "Average Number of Servings per Capita of Spirits - Worldwide 2010",
        fill = "Servings") + 
   theme_fivethirtyeight() + 
@@ -110,9 +108,9 @@ wine <- ggplot() +
            color = "grey20", size = .5) + 
   geom_map(data = drink_data, map = map_world,
            aes(fill = wine_servings, map_id = country)) + 
-  scale_fill_scico(palette = "tokyo") + 
+  scale_fill_gradient(low = "white", high = "#FF2700") + 
   labs(title = "Average Number of Servings per Capita of Wine - Worldwide 2010",
-       fill = "Servings", captions = "Non-Filled in countries indicate no data collected") + 
+       fill = "Servings", captions = "Dark Filled in countries indicate no data collected") + 
   theme_fivethirtyeight() + 
   theme(axis.text = element_blank(),
         legend.title = element_text(face = "bold"),

@@ -2,17 +2,23 @@ library(tidyverse)
 library(readxl)
 library(albersusa)
 library(ggthemes)
+library(tweenr)
+library(animation)
+
 
 tuition.raw <- readxl::read_xlsx("data/us_avg_tuition.xlsx") %>% 
   rename(state = State) # read in raw data and rename a column
+
 tuition.clean <- tuition.raw %>% 
   gather(year, tuition, `2004-05`:`2015-16`) %>% # put data in tidy long format
   group_by(state) %>% 
   mutate(lag = lag(tuition, 5),
          pct.change = (tuition-lag)/lag) %>% # compute rolling 5 yr. percent change
   na.omit()
+
 us <- usa_composite()
 us_map <- broom::tidy(us, region = "name")
+
 ggplot() +
   geom_map(data = us_map, map = us_map,
            aes(x = long, y = lat, map_id = id),
@@ -31,6 +37,7 @@ ggplot() +
         plot.title = element_text(hjust=0.5, face="bold"),
         plot.background = element_rect(fill="#f7f7f7", color = "transparent"),
         panel.background = element_rect(fill="#f7f7f7", color = "transparent"))
+
 tuition.clean %>% 
   filter(year %in% c("2010-11", "2015-16")) %>% 
   ggplot(aes(x = tuition, 
@@ -47,22 +54,27 @@ tuition.clean %>%
   theme(plot.title = element_text(hjust=0.5, face="bold"),
         plot.background = element_rect(fill="#f7f7f7", color = "transparent"),
         panel.background = element_rect(fill="#f7f7f7", color = "transparent"))
+
 tuition.2 <- tuition.raw %>% 
   gather(year, tuition, `2004-05`:`2015-16`) %>% 
   mutate(year = parse_number(gsub("\\-.*", "", year)),
          state = fct_reorder(factor(state), tuition, min))
+
 my_func <- function(y = 2008){
   tuition.2 %>% 
     filter(year == y) %>% 
     select(year, tuition, state)
 }
+
 my_list<-lapply(c(2004:2015, 2004), my_func)
+
 tweenr.df<-tween_states(my_list, 
                        tweenlength = 3,
                        statelength = 2, 
                        ease = rep('cubic-in-out',11),
                        nframes=250) %>% 
   mutate(state = fct_reorder(state, tuition, min))
+
 plotf3<- function(i=1){
 g <- tweenr.df %>% 
   filter(.frame==i) %>%
@@ -81,13 +93,15 @@ g <- tweenr.df %>%
         axis.title.y=element_blank(),
         panel.grid.major.y =element_blank())
 }
-saveGIF({for (i in 1:max(tween.df$.frame)){
+
+animation::saveGIF({for (i in 1:max(tweenr.df$.frame)){
   g<-plotf3(i)
   print(g)
-  print(paste(i,"out of",max(tween.df$.frame)))
+  print(paste(i,"out of",max(tweenr.df$.frame)))
   ani.pause()
-}
-},movie.name="tidytuesday.gif", ani.width=650, ani.height=800)
+}},movie.name="tidytuesday.gif", ani.width=650, ani.height=800)
+
+
 tweenr.df %>% 
   filter(.frame == 1) %>%
   ggplot(aes(x=tuition, y=state, label=state)) +
