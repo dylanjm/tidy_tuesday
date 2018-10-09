@@ -23,4 +23,3 @@ ggplot(data = dg_usa) +
         legend.title = element_text(face = "bold", size = 14),
         legend.key.size = grid::unit(1.3, "cm"), 
         legend.text = element_text(size = 12))
-
