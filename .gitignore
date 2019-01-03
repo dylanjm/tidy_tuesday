@@ -2,6 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-/data/data_2018/PublicTripData
-/data/data_2018/trip_clean.rds
+/data
 .httr-oauth
