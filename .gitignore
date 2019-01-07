@@ -2,5 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-data/
+data/data_2018
+data/data_2019
 .httr-oauth
