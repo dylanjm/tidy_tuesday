@@ -68,3 +68,4 @@ tt_tweets <- read_rds(here::here("data/data_2019/week01_tidy_tuesday_tweets.rds"
 
 
 top_users + density_plot - time_plot + plot_layout(ncol = 1) 
+
