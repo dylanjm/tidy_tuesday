@@ -2,8 +2,11 @@ library(tidyverse)
 library(ggrepel)
 library(gganimate)
 
+
+# Grab my predownloaded data
 tv_dat <- read_csv(here::here("data/data_2019/week02_tv_ratings.csv"))
 
+# Shows we'll look at specifically
 tv_shows <- c("The Sopranos", 
               "Twin Peaks", 
               "Sex and the City", 
@@ -12,6 +15,8 @@ tv_shows <- c("The Sopranos",
               "Breaking Bad", 
               "Game of Thrones")
 
+# This will let us label our plot correctly
+# also we need to account for the two reboots in our data
 tv_show_dat <- tv_dat %>% 
   filter(title %in% tv_shows) %>% 
   mutate(title = case_when(
@@ -20,10 +25,15 @@ tv_show_dat <- tv_dat %>%
     TRUE ~ title
   ))
 
+# Without this we'll get a text label at each highlighted point
+# We only want the text to show on the first point for each series
 labs <- tv_show_dat %>% 
   group_by(title) %>% 
   filter(row_number(title) == 1)
 
+# First Plot
+# We are trying to make it _exactly_ as it is created on the article
+# (sans interactive element)
 tv_dat %>% 
   mutate(year = lubridate::year(date)) %>% 
   ggplot(aes(x = date, y = av_rating, size = share)) + 
@@ -62,16 +72,19 @@ tv_dat %>%
         panel.grid.major.y = element_blank(), 
         legend.position = "none")
 
+# Unnesting all the genre data for each tv show
 genre_dat <- tv_dat %>% 
   mutate(genres = str_split(genres, pattern = ",")) %>% 
   unnest()
 
+# Grabbing the top five genres in the data-set
 top_genres <- genre_dat %>% 
   count(genres) %>% 
   top_n(6, n) %>% 
   mutate(genres = fct_reorder(genres, n, max, .desc = T)) %>% 
   pull(genres)
 
+# Visualization of how time effects ratings. 
 genre_dat %>% 
   filter(genres %in% top_genres) %>%
   mutate(genres = fct_relevel(genres, c("Drama", "Crime", "Mystery",
@@ -98,7 +111,7 @@ genre_dat %>%
         plot.subtitle = element_text(hjust = .5, size = rel(1.5))
         )
 
-
+# Throw away plot; making an animation, I don't think this has strong interpretative value. 
 tv_dat %>% 
   mutate(year = lubridate::year(date)) %>% 
   ggplot(aes(x = share, y = av_rating, size = seasonNumber)) + 
