@@ -1,0 +1,12 @@
+name: tv_ratings
+title: tv_ratings
+username:
+account: dylanjm
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 632715
+bundleId: 1804045
+url: https://dylanjm.shinyapps.io/tv_ratings/
+when: 1547002625.34238
+asMultiple: FALSE
+asStatic: FALSE

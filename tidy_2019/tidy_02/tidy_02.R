@@ -2,7 +2,6 @@ library(tidyverse)
 library(ggrepel)
 library(gganimate)
 
-
 # Grab my predownloaded data
 tv_dat <- read_csv(here::here("data/data_2019/week02_tv_ratings.csv"))
 
