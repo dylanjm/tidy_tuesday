@@ -1,6 +1,8 @@
 library(tidyverse)
+library(broom)
 
-food_dat <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018-09-04/fastfood_calories.csv")
+
+food_dat <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
 
 mean_cal <- food_dat %>% 
   group_by(restaurant) %>% 
@@ -20,3 +22,15 @@ ggplot(mean_cal, aes(x = restaurant, y = mean_cal, fill = restaurant)) +
         panel.background = element_rect(fill = "#e9fbfe", color = NA),
         plot.background = element_rect(fill = "#e9fbfe"),
         legend.position = "none")
+
+food_dat %>% 
+  nest(-restaurant) %>% 
+  mutate(fit = map(data, ~lm(calories ~ sodium, data = .)), 
+         results = map(fit, augment)) %>% 
+  unnest(results) %>% 
+  ggplot(aes(x = calories, y = .fitted)) +
+  geom_abline(intercept = 0, slope = 1, alpha = .2) +  # Line of perfect fit
+  geom_point() +
+  facet_grid(restaurant ~ .) +
+  labs(x = "calories", y = "Predicted Value") +
+  theme_bw()

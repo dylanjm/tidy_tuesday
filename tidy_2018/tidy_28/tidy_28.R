@@ -1,12 +1,12 @@
 library(tidyverse)
-library(albersusa)
+library(USAboundaries)
 
-voter_dat <- read_csv(here::here("data/week28_voter_turnout.csv"))
+voter_dat <- read_csv(here::here("data/data_2018/week28_voter_turnout.csv"))
 
 votes_map <- voter_dat %>% 
   filter(year == 2016) %>% 
   mutate(pct_turnout = votes/eligible_voters) %>% 
-  left_join(usa_sf(), by = c("state" = "name"))
+  left_join(us_states(), by = c("state" = "name"))
 
 
 ggplot(data = votes_map) + 
